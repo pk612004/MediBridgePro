@@ -45,7 +45,7 @@ function App() {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/upload_pdf", {
+      const response = await fetch("https://medibridge-backend-l8cf.onrender.com/upload_pdf", {
         method: "POST",
         body: formData,
       });
