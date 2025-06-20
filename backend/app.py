@@ -5,26 +5,23 @@ import os
 import fitz  # PyMuPDF
 from ai.gpt_engine import generate_summary  # Groq-based summarizer
 
-
 # -------------------- Flask App Setup --------------------
 app = Flask(__name__)
-app.secret_key = "supersecretkey123"  # Change this in production
+app.secret_key = "supersecretkey123"
 
-# Enable CORS with credentials support for session management
 CORS(app, supports_credentials=True)
 
-# -------------------- Upload PDF Setup --------------------
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+# ✅ Health check route
+@app.route("/")
+def home():
+    return jsonify({"message": "✅ MediBridgePro Backend is Live!"})
 
-# Upload PDF route
+# Upload PDF
 @app.route("/upload_pdf", methods=["POST"])
 def upload_pdf():
-    # Optional: Require login before allowing upload
-    # if "user" not in session:
-    #     return jsonify({"error": "Unauthorized"}), 401
-
     if "file" not in request.files:
         return jsonify({"error": "No file uploaded"}), 400
 
@@ -37,7 +34,6 @@ def upload_pdf():
     file.save(filepath)
 
     try:
-        # Read PDF content
         with fitz.open(filepath) as pdf:
             text = ""
             for page in pdf:
@@ -50,6 +46,5 @@ def upload_pdf():
         return jsonify({"summary": f"[ERROR] {str(e)}"}), 500
 
 
-# -------------------- Main --------------------
 if __name__ == "__main__":
     app.run(debug=True)
