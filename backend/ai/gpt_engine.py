@@ -1,8 +1,7 @@
+import os
 from groq import Groq
 
-client = Groq(
-    api_key="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"  # just this!
-)
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))  # ✅ Use env variable
 
 def generate_summary(medical_text):
     try:
@@ -20,7 +19,7 @@ def generate_summary(medical_text):
         """
 
         response = client.chat.completions.create(
-            model="llama3-8b-8192",  # ✅ Groq-supported model
+            model="llama3-8b-8192", 
             messages=[
                 {"role": "system", "content": "You are a medical assistant specialized in summarizing reports."},
                 {"role": "user", "content": prompt}
