@@ -1,4 +1,3 @@
-// App.js – MediBridgePro Frontend with Hero UI
 import React, { useState } from "react";
 import {
   Container,
@@ -11,24 +10,63 @@ import {
   Card,
   CardContent,
   Stack,
-  IconButton,
-  Grid,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import PrintIcon from "@mui/icons-material/Print";
-import ShareIcon from "@mui/icons-material/Share";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import jsPDF from "jspdf";
 import { styled } from "@mui/system";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+} from "recharts";
 import { motion } from "framer-motion";
 import Lottie from "lottie-react";
-import uploadAnim from "./assets/upload.json";
 import processingAnim from "./assets/processing.json";
 import doctorIllustration from "./assets/doctor-flat.svg";
 import "./App.css";
+
+// Motivational quotes for the hero
+const quotes = [
+  "“Health is wealth.”",
+  "“Every step towards clarity is a step towards healing.”",
+  "“Knowledge empowers your care.”",
+];
+
+const FloatingQuotes = () => (
+  <Box
+    sx={{
+      position: "absolute",
+      top: 16,
+      left: 0,
+      right: 0,
+      display: "flex",
+      justifyContent: "center",
+      pointerEvents: "none",
+      gap: 4,
+    }}
+  >
+    {quotes.map((q, i) => (
+      <motion.div
+        key={i}
+        initial={{ y: -10, opacity: 0 }}
+        animate={{ y: [0, -5, 0], opacity: 1 }}
+        transition={{ repeat: Infinity, duration: 4, delay: i * 1.2 }}
+      >
+        <Typography variant="subtitle2" fontStyle="italic" color="text.secondary">
+          {q}
+        </Typography>
+      </motion.div>
+    ))}
+  </Box>
+);
 
 const Input = styled("input")({ display: "none" });
 
@@ -54,10 +92,10 @@ function App() {
     formData.append("file", file);
 
     try {
-      const res = await fetch("https://medibridge-backend-l8cf.onrender.com/upload_pdf", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        "https://medibridge-backend-l8cf.onrender.com/upload_pdf",
+        { method: "POST", body: formData }
+      );
       const data = await res.json();
       setSummary(data.summary || "");
       setIcdData(data.icd_codes || []);
@@ -87,7 +125,7 @@ function App() {
         return (
           <Card sx={{ mt: 3 }}>
             <CardContent>
-              <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
+              <Typography variant="body2" sx={{ whiteSpace: "pre-wrap", fontWeight: 500 }}>
                 {summary}
               </Typography>
             </CardContent>
@@ -114,7 +152,13 @@ function App() {
                     {diagnosisData.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
-                        fill={entry.severity > 7 ? "#e57373" : entry.severity > 4 ? "#ffb74d" : "#81c784"}
+                        fill={
+                          entry.severity > 7
+                            ? "#e57373"
+                            : entry.severity > 4
+                            ? "#ffb74d"
+                            : "#81c784"
+                        }
                       />
                     ))}
                   </Bar>
@@ -151,76 +195,105 @@ function App() {
 
   return (
     <Box>
-      {/* HERO SECTION */}
-      <Box
-        sx={{
-          px: 4,
-          py: 6,
-          background: "linear-gradient(135deg, #e0f7fa, #f3e5f5)",
-          minHeight: "90vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-        }}
-      >
-        <Box sx={{ maxWidth: 500 }}>
-          <Typography variant="h3" fontWeight={700} color="#222" gutterBottom>
-            MediBridgePro
-          </Typography>
-          <Typography variant="h5" fontWeight={400} color="text.secondary">
-            Smart Health Summarizer
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ my: 2 }}>
-            Upload medical reports (PDF), get instant AI-generated summaries & ICD-10 insights.
-          </Typography>
+      {/* HERO or SUMMARY HERO */}
+      {!summary ? (
+        <Box
+          sx={{
+            position: "relative",
+            px: 4,
+            py: 6,
+            background: "linear-gradient(135deg, #e0f7fa, #f3e5f5)",
+            minHeight: "90vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+          }}
+        >
+          <FloatingQuotes />
 
-          {/* Upload Button */}
-          <label htmlFor="upload-pdf">
-            <Input accept="application/pdf" id="upload-pdf" type="file" onChange={handleFileChange} />
-            <Button
-              variant="contained"
-              component="span"
-              size="large"
-              sx={{
-                borderRadius: "25px",
-                px: 4,
-                py: 1.5,
-                fontWeight: "bold",
-                mt: 2,
-                backgroundColor: "#ff5252",
-                "&:hover": {
-                  backgroundColor: "#ff1744",
-                },
-              }}
-            >
-              GET REPORT
-            </Button>
-          </label>
-          {file && (
-            <Button
-              variant="outlined"
-              sx={{ ml: 2, mt: 2 }}
-              onClick={handleUpload}
-              disabled={isLoading}
-            >
-              Generate Summary
-            </Button>
-          )}
+          {/* Left text + buttons */}
+          <Box sx={{ maxWidth: 500 }}>
+            <Typography variant="h3" fontWeight={700} color="#222" gutterBottom>
+              MediBridgePro
+            </Typography>
+            <Typography variant="h5" fontWeight={400} color="text.secondary">
+              Smart Health Summarizer
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ my: 2 }}>
+              Upload medical reports (PDF), get instant AI-generated summaries & ICD-10 insights.
+            </Typography>
+
+            <label htmlFor="upload-pdf">
+              <Input accept="application/pdf" id="upload-pdf" type="file" onChange={handleFileChange} />
+              <Button
+                variant="contained"
+                component="span"
+                size="large"
+                sx={{
+                  borderRadius: "25px",
+                  px: 4,
+                  py: 1.5,
+                  fontWeight: "bold",
+                  mt: 2,
+                  backgroundColor: "#ff5252",
+                  "&:hover": { backgroundColor: "#ff1744" },
+                }}
+              >
+                GET REPORT
+              </Button>
+            </label>
+            {file && (
+              <Button variant="outlined" sx={{ ml: 2, mt: 2 }} onClick={handleUpload} disabled={isLoading}>
+                Generate Summary
+              </Button>
+            )}
+          </Box>
+
+          {/* Doctor Illustration */}
+          <Box sx={{ mt: { xs: 4, md: 0 } }}>
+            <motion.img
+              src={doctorIllustration}
+              alt="Doctor Illustration"
+              style={{ width: "100%", maxWidth: 350 }}
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+            />
+          </Box>
         </Box>
-
-        {/* Doctor Illustration */}
-        <Box sx={{ mt: { xs: 4, md: 0 } }}>
+      ) : (
+        // SUMMARY HERO
+        <Box
+          sx={{
+            px: 4,
+            py: 6,
+            background: "#fff",
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 4,
+          }}
+        >
           <motion.img
             src={doctorIllustration}
             alt="Doctor Illustration"
-            style={{ width: "100%", maxWidth: 350 }}
-            initial={{ opacity: 0, x: 30 }}
+            style={{ width: 200, flexShrink: 0 }}
+            initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           />
+          <Card sx={{ flexGrow: 1, boxShadow: 3 }}>
+            <CardContent>
+              <Typography variant="h5" fontWeight={700} gutterBottom>
+                AI-Generated Summary
+              </Typography>
+              <Typography variant="body1" sx={{ whiteSpace: "pre-wrap", fontWeight: 500 }}>
+                {summary}
+              </Typography>
+            </CardContent>
+          </Card>
         </Box>
-      </Box>
+      )}
 
       {/* MAIN CONTENT */}
       <Container maxWidth="md" sx={{ mt: 4 }}>
@@ -236,30 +309,19 @@ function App() {
 
         {summary && !isLoading && (
           <Box>
-            <Tabs
-              value={tab}
-              onChange={(e, newVal) => setTab(newVal)}
-              textColor="primary"
-              indicatorColor="primary"
-              sx={{ mt: 4 }}
-            >
+            <Tabs value={tab} onChange={(e, v) => setTab(v)} sx={{ mt: 4 }}>
               <Tab label="Summary" />
               <Tab label="Diagnosis" />
               <Tab label="ICD-10 Codes" />
             </Tabs>
-            <motion.div
-              key={tab}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
+            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               {renderTabContent()}
             </motion.div>
             <Stack direction="row" spacing={2} mt={3}>
-              <Button variant="outlined" size="small" startIcon={<ContentCopyIcon />} onClick={() => navigator.clipboard.writeText(summary)}>
+              <Button size="small" startIcon={<ContentCopyIcon />} onClick={() => navigator.clipboard.writeText(summary)}>
                 Copy
               </Button>
-              <Button variant="text" size="small" startIcon={<VolumeUpIcon />} onClick={() => speechSynthesis.speak(new SpeechSynthesisUtterance(summary))}>
+              <Button size="small" startIcon={<VolumeUpIcon />} onClick={() => speechSynthesis.speak(new SpeechSynthesisUtterance(summary))}>
                 Read Aloud
               </Button>
               <Button variant="contained" size="small" onClick={handleDownloadPDF} startIcon={<FileDownloadIcon />}>

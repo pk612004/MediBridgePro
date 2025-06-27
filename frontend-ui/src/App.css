@@ -1,5 +1,6 @@
-/* Updated App.css – Step 3: Clean Modern UI Styling */
-
+/* ========================================================================
+   Base & Gradient Background
+   ======================================================================== */
 body {
   margin: 0;
   font-family: "Inter", "Segoe UI", sans-serif;
@@ -10,35 +11,74 @@ body {
 }
 
 @keyframes gradientMotion {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
+/* ========================================================================
+   Hero Section
+   ======================================================================== */
+.hero-section {
+  position: relative;
+  padding: 4rem 2rem;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #e0f7fa, #f3e5f5);
+  overflow: hidden;
+}
+
+.floating-quote {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.floating-quote p {
+  display: inline-block;
+  margin: 0 1rem;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.6);
+  animation: floatUp 6s ease-in-out infinite;
+}
+
+@keyframes floatUp {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50%      { transform: translateY(-10px); opacity: 1; }
+}
+
+/* ========================================================================
+   Upload Box & Buttons
+   ======================================================================== */
 .upload-container {
-  padding-top: 3rem;
-  padding-bottom: 4rem;
+  text-align: center;
+  width: 100%;
 }
 
 .upload-box {
+  display: inline-block;
   padding: 2rem;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(12px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  text-align: center;
   animation: fadeIn 1s ease-in-out;
 }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .action-btn {
   margin: 1rem 0.5rem;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   border-radius: 10px;
 }
 
@@ -47,27 +87,54 @@ body {
   box-shadow: 0 0 0 3px rgba(100, 181, 246, 0.3);
 }
 
-.summary-box {
+/* ========================================================================
+   Summary Hero Layout
+   ======================================================================== */
+.summary-hero {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 3rem;
-  width: 100%;
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 4rem 2rem;
+  background: #fff;
+}
+
+.summary-hero img {
+  width: 200px;
+  animation: slideInLeft 0.6s ease-out forwards;
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.summary-card {
+  flex-grow: 1;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.summary-card .MuiCardContent-root {
   padding: 2rem;
 }
 
-.summary-text {
-  background: white;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-  font-size: 1rem;
+.summary-card .MuiTypography-h5 {
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.summary-card .MuiTypography-body1 {
+  font-weight: 500;
   line-height: 1.6;
-  color: #333;
   white-space: pre-wrap;
+}
+
+/* ========================================================================
+   Tabs & Cards
+   ======================================================================== */
+.MuiTabs-root {
+  margin-top: 2rem;
 }
 
 .MuiTab-root {
@@ -90,7 +157,9 @@ body {
   margin-bottom: 0.5rem;
 }
 
-/* Improve chart responsiveness */
+/* ========================================================================
+   Chart Container
+   ======================================================================== */
 .recharts-wrapper {
   max-width: 100%;
   overflow-x: auto;
