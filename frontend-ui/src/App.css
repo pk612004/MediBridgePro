@@ -1,4 +1,4 @@
-/* MediBridgePro – Final Polished App.css */
+/* MediBridgePro – Final Unified & Enhanced App.css */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display&display=swap');
 
@@ -12,47 +12,14 @@ body {
   color: #1a1a1a;
 }
 
-/* Smooth Scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Gradient Animation */
 @keyframes gradientMotion {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
-}
-
-/* Motivational Quotes */
-.quote-container {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 10;
-  pointer-events: none;
-}
-.quote {
-  font-size: 0.9rem;
-  font-style: italic;
-  margin-bottom: 8px;
-  padding: 6px 12px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(8px);
-  color: #2c2c2c;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-  animation: float 6s ease-in-out infinite;
-  transition: all 0.3s ease;
-}
-.quote-1 { animation-delay: 0s; }
-.quote-2 { animation-delay: 1.5s; }
-.quote-3 { animation-delay: 3s; }
-
-@keyframes float {
-  0%   { transform: translateY(0px); }
-  50%  { transform: translateY(-8px); }
-  100% { transform: translateY(0px); }
 }
 
 /* Upload Box */
@@ -68,6 +35,7 @@ html {
   transition: all 0.4s ease;
   overflow: hidden;
 }
+
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.96); }
   to { opacity: 1; transform: scale(1); }
@@ -85,13 +53,14 @@ html {
   pointer-events: none;
   border-radius: 20px;
 }
+
 @keyframes shimmer {
   0% { left: -75%; }
   50% { left: 125%; }
   100% { left: 125%; }
 }
 
-/* Glass Summary Card */
+/* Summary Card */
 .summary-card {
   background: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(16px);
@@ -106,7 +75,6 @@ html {
   font-family: "Playfair Display", serif;
 }
 
-/* Custom Scrollbar inside summary */
 .summary-card::-webkit-scrollbar {
   width: 8px;
 }
@@ -118,7 +86,7 @@ html {
   background: transparent;
 }
 
-/* Button Enhancements */
+/* Buttons */
 button {
   transition: all 0.3s ease;
   cursor: pointer;
@@ -129,18 +97,13 @@ button:hover {
   transform: scale(1.03);
 }
 
-/* Responsive – hide quotes */
-@media (max-width: 768px) {
-  .quote-container {
-    display: none;
-  }
-}
+/* Floating Side Decor Images */
 .floating-decor {
-  position: absolute;
+  position: fixed;
   width: 100px;
   opacity: 0.8;
   animation: slowFloat 18s ease-in-out infinite;
-  z-index: 0;
+  z-index: 1;
 }
 
 .floating-1 {
@@ -155,19 +118,27 @@ button:hover {
   animation-delay: 3s;
 }
 
+@keyframes slowFloat {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Floating Motivational Quotes */
 .floating-quote {
-  position: absolute;
+  position: fixed;
   max-width: 220px;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-style: italic;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(8px);
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(10px);
   padding: 10px 16px;
   border-radius: 16px;
   color: #3b3b3b;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   animation: quoteDrift 12s ease-in-out infinite;
-  z-index: 0;
+  z-index: 2;
 }
 
 .floating-quote-top {
@@ -181,20 +152,50 @@ button:hover {
   animation-delay: 2s;
 }
 
-@keyframes slowFloat {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-  100% { transform: translateY(0px); }
-}
-
 @keyframes quoteDrift {
   0% { transform: translateX(0px); }
   50% { transform: translateX(10px); }
   100% { transform: translateX(0px); }
 }
 
+/* Old Fixed Quote Box (top-left) */
+.quote-container {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.quote {
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-bottom: 8px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(8px);
+  color: #2c2c2c;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  animation: float 6s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+.quote-1 { animation-delay: 0s; }
+.quote-2 { animation-delay: 1.5s; }
+.quote-3 { animation-delay: 3s; }
+
+@keyframes float {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Responsive Cleanup */
 @media (max-width: 768px) {
-  .floating-decor, .floating-quote {
+  .floating-decor,
+  .floating-quote,
+  .quote-container {
     display: none;
   }
 }
