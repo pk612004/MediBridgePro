@@ -9,18 +9,20 @@ import {
   Slide,
   Fade,
   Grid,
+  Stack,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import { styled } from "@mui/system";
 import Lottie from "lottie-react";
 import uploadAnim from "./assets/upload.json";
 import processingAnim from "./assets/processing.json";
-import illustration from "./assets/illustration.png"; // ✅ Medical Illustration
-import "./App.css"; // ✅ Make sure this has quote and layout styling
+import illustration from "./assets/illustration.png";
+import jsPDF from "jspdf";
+import "./App.css";
 
-const Input = styled("input")({
-  display: "none",
-});
+const Input = styled("input")({ display: "none" });
 
 function App() {
   const [file, setFile] = useState(null);
@@ -54,9 +56,24 @@ function App() {
     }
   };
 
+  const handleDownload = () => {
+    const doc = new jsPDF();
+    doc.setFont("times", "normal");
+    doc.setFontSize(12);
+    doc.text(summary, 10, 20, { maxWidth: 180 });
+    doc.save("MediBridge_Summary.pdf");
+  };
+
+  const handleSpeak = () => {
+    const utterance = new SpeechSynthesisUtterance(summary);
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    window.speechSynthesis.speak(utterance);
+  };
+
   return (
     <Container maxWidth="lg" sx={{ mt: 8 }}>
-      {/* 💬 Floating Motivational Quotes */}
+      {/* Floating motivational quotes */}
       <div className="quote-container">
         <div className="quote quote-1">🌟 You're stronger than your diagnosis!</div>
         <div className="quote quote-2">💖 Healing begins with hope.</div>
@@ -76,18 +93,14 @@ function App() {
         }}
       >
         <Grid container spacing={4} alignItems="center">
-          {/* 📷 Left Illustration */}
+          {/* Left panel - illustration */}
           <Grid item xs={12} md={5}>
             <Box display="flex" justifyContent="center" alignItems="center">
-              <img
-                src={illustration}
-                alt="medical-illustration"
-                style={{ width: "100%", maxWidth: "400px" }}
-              />
+              <img src={illustration} alt="medical" style={{ width: "100%", maxWidth: "400px" }} />
             </Box>
           </Grid>
 
-          {/* 📄 Upload + Summary */}
+          {/* Right panel - upload & summary */}
           <Grid item xs={12} md={7}>
             <Typography
               variant="h4"
@@ -169,44 +182,48 @@ function App() {
             </Box>
 
             <Slide direction="up" in={!!summary && !isLoading} mountOnEnter unmountOnExit>
-  <Fade in={!!summary && !isLoading}>
-    <Box mt={5}>
-      <Typography
-        variant="h5"
-        fontWeight={700}
-        color="primary"
-        gutterBottom
-        sx={{ display: "flex", alignItems: "center", gap: 1 }}
-      >
-        📝 Summary
-      </Typography>
+              <Fade in={!!summary && !isLoading}>
+                <Box mt={4}>
+                  <Typography variant="h6" gutterBottom>
+                    📝 Summary:
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      whiteSpace: "pre-wrap",
+                      backgroundColor: "#f5faff",
+                      p: 3,
+                      borderRadius: 3,
+                      fontFamily: "Georgia, serif",
+                      fontSize: "16px",
+                      lineHeight: 1.6,
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+                      border: "1px solid #ddeeff",
+                      color: "#333",
+                    }}
+                  >
+                    {summary}
+                  </Typography>
 
-      <Box
-        sx={{
-          background: "linear-gradient(135deg, #ffffff, #f1f9ff)",
-          borderLeft: "5px solid #1976d2",
-          borderRadius: 3,
-          p: 3,
-          maxHeight: "320px",
-          overflowY: "auto",
-          fontFamily: "'Segoe UI', sans-serif",
-          fontSize: "1.05rem",
-          boxShadow: "0 6px 16px rgba(0,0,0,0.1)",
-          lineHeight: 1.7,
-          transition: "all 0.4s ease",
-        }}
-      >
-        <Typography
-          variant="body1"
-          sx={{ whiteSpace: "pre-wrap", color: "#333" }}
-        >
-          {summary}
-        </Typography>
-      </Box>
-    </Box>
-  </Fade>
-</Slide>
-
+                  <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
+                    <Button
+                      variant="outlined"
+                      startIcon={<VolumeUpIcon />}
+                      onClick={handleSpeak}
+                    >
+                      Read Aloud
+                    </Button>
+                    <Button
+                      variant="contained"
+                      startIcon={<FileDownloadIcon />}
+                      onClick={handleDownload}
+                    >
+                      Download PDF
+                    </Button>
+                  </Stack>
+                </Box>
+              </Fade>
+            </Slide>
           </Grid>
         </Grid>
       </Paper>
