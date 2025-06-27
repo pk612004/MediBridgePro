@@ -1,12 +1,9 @@
-// Updated App.js – Step 2: Add Animated Graphs to Diagnosis Tab
+// Updated App.js – Step 4: Animated Header + Clean Layout
 
 import React, { useState } from "react";
 import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
   Container,
+  Typography,
   Box,
   Button,
   CircularProgress,
@@ -16,6 +13,8 @@ import {
   CardContent,
   Chip,
   Stack,
+  IconButton,
+  Grid,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
@@ -25,10 +24,12 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import jsPDF from "jspdf";
 import { styled } from "@mui/system";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import { motion } from "framer-motion";
 import Lottie from "lottie-react";
 import uploadAnim from "./assets/upload.json";
 import processingAnim from "./assets/processing.json";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import doctorIllustration from "./assets/doctor-flat.svg";
 import "./App.css";
 
 const Input = styled("input")({ display: "none" });
@@ -37,7 +38,7 @@ function App() {
   const [file, setFile] = useState(null);
   const [summary, setSummary] = useState("");
   const [icdData, setIcdData] = useState([]);
-  const [diagnosisData, setDiagnosisData] = useState([]); // new
+  const [diagnosisData, setDiagnosisData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [tab, setTab] = useState(0);
 
@@ -62,7 +63,7 @@ function App() {
       const data = await res.json();
       setSummary(data.summary || "");
       setIcdData(data.icd_codes || []);
-      setDiagnosisData(data.diagnosis_chart || []); // expects: [ { name, severity (1-10) } ]
+      setDiagnosisData(data.diagnosis_chart || []);
     } catch (err) {
       setSummary("❌ Error: Could not connect to backend.");
     } finally {
@@ -152,42 +153,50 @@ function App() {
 
   return (
     <Box>
-      <AppBar position="static" color="default" elevation={0}>
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            MediBridgePro Health Report
-          </Typography>
-          <IconButton aria-label="print">
-            <PrintIcon />
-          </IconButton>
-          <IconButton aria-label="download" onClick={handleDownloadPDF}>
-            <FileDownloadIcon />
-          </IconButton>
-          <IconButton aria-label="share">
-            <ShareIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
+      {/* Custom Header with SVG Illustration */}
+      <Box className="custom-header" sx={{ px: 4, py: 4, backgroundColor: "#f6fbfd" }}>
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={12} md={8}>
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <Typography variant="h4" fontWeight={600} gutterBottom>
+                MediBridgePro Health Report
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary">
+                Patient: Mr. Tan Ah Kow &nbsp;|&nbsp; Age: 55 &nbsp;|&nbsp; ID: S1111111X
+              </Typography>
+              <Stack direction="row" spacing={1} mt={2}>
+                <IconButton><PrintIcon /></IconButton>
+                <IconButton onClick={handleDownloadPDF}><FileDownloadIcon /></IconButton>
+                <IconButton><ShareIcon /></IconButton>
+              </Stack>
+            </motion.div>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <motion.img
+              src={doctorIllustration}
+              alt="Doctor Illustration"
+              style={{ width: "100%", maxWidth: 240 }}
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            />
+          </Grid>
+        </Grid>
+      </Box>
 
+      {/* Upload + Tabs Section */}
       <Container maxWidth="md" sx={{ mt: 4 }}>
         <Box textAlign="center">
           <label htmlFor="upload-pdf">
-            <Input
-              accept="application/pdf"
-              id="upload-pdf"
-              type="file"
-              onChange={handleFileChange}
-            />
-            <Button
-              variant="contained"
-              component="span"
-              startIcon={<CloudUploadIcon />}
-              className="action-btn"
-            >
+            <Input accept="application/pdf" id="upload-pdf" type="file" onChange={handleFileChange} />
+            <Button variant="contained" component="span" startIcon={<CloudUploadIcon />} className="action-btn">
               Upload PDF
             </Button>
           </label>
-
           {file && (
             <Button
               variant="outlined"
@@ -223,25 +232,19 @@ function App() {
               <Tab label="Diagnosis" />
               <Tab label="ICD-10 Codes" />
             </Tabs>
-            {renderTabContent()}
+            <motion.div
+              key={tab}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              {renderTabContent()}
+            </motion.div>
             <Stack direction="row" spacing={2} mt={3}>
-              <Button
-                variant="outlined"
-                size="small"
-                startIcon={<ContentCopyIcon />}
-                onClick={() => navigator.clipboard.writeText(summary)}
-              >
+              <Button variant="outlined" size="small" startIcon={<ContentCopyIcon />} onClick={() => navigator.clipboard.writeText(summary)}>
                 Copy
               </Button>
-              <Button
-                variant="text"
-                size="small"
-                startIcon={<VolumeUpIcon />}
-                onClick={() => {
-                  const u = new SpeechSynthesisUtterance(summary);
-                  speechSynthesis.speak(u);
-                }}
-              >
+              <Button variant="text" size="small" startIcon={<VolumeUpIcon />} onClick={() => speechSynthesis.speak(new SpeechSynthesisUtterance(summary))}>
                 Read Aloud
               </Button>
             </Stack>
