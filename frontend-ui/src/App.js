@@ -1,4 +1,4 @@
-// MediBridgePro – Stunning Glassmorphism UI Layout with Side Decor + Quotes
+// MediBridgePro – Stunning Glassmorphism UI Layout with Medical Decor, Plus Sign Background + Quotes
 import React, { useState } from "react";
 import {
   Button,
@@ -75,6 +75,9 @@ function App() {
 
   return (
     <>
+      {/* Background with medical plus signs */}
+      <div className="plus-bg" />
+
       {/* Floating Decor & Quotes */}
       <img src={side1} alt="floating1" className="floating-decor floating-1" />
       <img src={side2} alt="floating2" className="floating-decor floating-2" />
@@ -113,6 +116,8 @@ function App() {
             backdropFilter: "blur(16px)",
             boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
             border: "1px solid rgba(255, 255, 255, 0.4)",
+            position: "relative",
+            zIndex: 1,
           }}
         >
           <Grid container spacing={4} alignItems="center">

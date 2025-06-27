@@ -199,3 +199,18 @@ button:hover {
     display: none;
   }
 }
+/* Plus-sign Medical Background */
+.plus-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(#b2d8f7 1.2px, transparent 1.2px),
+                    radial-gradient(#b2d8f7 1.2px, transparent 1.2px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  opacity: 0.15;
+  z-index: 0;
+  pointer-events: none;
+}
