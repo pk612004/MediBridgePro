@@ -1,5 +1,4 @@
-// Updated App.js – Step 4: Animated Header + Clean Layout
-
+// App.js – MediBridgePro Frontend with Hero UI
 import React, { useState } from "react";
 import {
   Container,
@@ -11,7 +10,6 @@ import {
   Tab,
   Card,
   CardContent,
-  Chip,
   Stack,
   IconButton,
   Grid,
@@ -153,54 +151,56 @@ function App() {
 
   return (
     <Box>
-      {/* Custom Header with SVG Illustration */}
-      <Box className="custom-header" sx={{ px: 4, py: 4, backgroundColor: "#f6fbfd" }}>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} md={8}>
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <Typography variant="h4" fontWeight={600} gutterBottom>
-                MediBridgePro Health Report
-              </Typography>
-              <Typography variant="subtitle1" color="text.secondary">
-                Patient: Mr. Tan Ah Kow &nbsp;|&nbsp; Age: 55 &nbsp;|&nbsp; ID: S1111111X
-              </Typography>
-              <Stack direction="row" spacing={1} mt={2}>
-                <IconButton><PrintIcon /></IconButton>
-                <IconButton onClick={handleDownloadPDF}><FileDownloadIcon /></IconButton>
-                <IconButton><ShareIcon /></IconButton>
-              </Stack>
-            </motion.div>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <motion.img
-              src={doctorIllustration}
-              alt="Doctor Illustration"
-              style={{ width: "100%", maxWidth: 240 }}
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            />
-          </Grid>
-        </Grid>
-      </Box>
+      {/* HERO SECTION */}
+      <Box
+        sx={{
+          px: 4,
+          py: 6,
+          background: "linear-gradient(135deg, #e0f7fa, #f3e5f5)",
+          minHeight: "90vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+        }}
+      >
+        <Box sx={{ maxWidth: 500 }}>
+          <Typography variant="h3" fontWeight={700} color="#222" gutterBottom>
+            MediBridgePro
+          </Typography>
+          <Typography variant="h5" fontWeight={400} color="text.secondary">
+            Smart Health Summarizer
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ my: 2 }}>
+            Upload medical reports (PDF), get instant AI-generated summaries & ICD-10 insights.
+          </Typography>
 
-      {/* Upload + Tabs Section */}
-      <Container maxWidth="md" sx={{ mt: 4 }}>
-        <Box textAlign="center">
+          {/* Upload Button */}
           <label htmlFor="upload-pdf">
             <Input accept="application/pdf" id="upload-pdf" type="file" onChange={handleFileChange} />
-            <Button variant="contained" component="span" startIcon={<CloudUploadIcon />} className="action-btn">
-              Upload PDF
+            <Button
+              variant="contained"
+              component="span"
+              size="large"
+              sx={{
+                borderRadius: "25px",
+                px: 4,
+                py: 1.5,
+                fontWeight: "bold",
+                mt: 2,
+                backgroundColor: "#ff5252",
+                "&:hover": {
+                  backgroundColor: "#ff1744",
+                },
+              }}
+            >
+              GET REPORT
             </Button>
           </label>
           {file && (
             <Button
               variant="outlined"
-              sx={{ ml: 2 }}
+              sx={{ ml: 2, mt: 2 }}
               onClick={handleUpload}
               disabled={isLoading}
             >
@@ -209,6 +209,21 @@ function App() {
           )}
         </Box>
 
+        {/* Doctor Illustration */}
+        <Box sx={{ mt: { xs: 4, md: 0 } }}>
+          <motion.img
+            src={doctorIllustration}
+            alt="Doctor Illustration"
+            style={{ width: "100%", maxWidth: 350 }}
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          />
+        </Box>
+      </Box>
+
+      {/* MAIN CONTENT */}
+      <Container maxWidth="md" sx={{ mt: 4 }}>
         {isLoading && (
           <Box mt={4} textAlign="center">
             <Lottie animationData={processingAnim} style={{ height: 120 }} />
@@ -246,6 +261,9 @@ function App() {
               </Button>
               <Button variant="text" size="small" startIcon={<VolumeUpIcon />} onClick={() => speechSynthesis.speak(new SpeechSynthesisUtterance(summary))}>
                 Read Aloud
+              </Button>
+              <Button variant="contained" size="small" onClick={handleDownloadPDF} startIcon={<FileDownloadIcon />}>
+                Download PDF
               </Button>
             </Stack>
           </Box>
