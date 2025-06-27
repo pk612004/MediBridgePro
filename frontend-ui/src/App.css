@@ -1,25 +1,16 @@
-/* MediBridgePro – Final Unified & Enhanced App.css */
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display&display=swap');
 
 body {
   margin: 0;
   font-family: "Inter", "Segoe UI", sans-serif;
-  background: linear-gradient(120deg, #eaf6f6, #fdf6fd);
-  background-size: 300% 300%;
-  animation: gradientMotion 20s ease infinite;
+  background: url('./assets/medibg.png') no-repeat center center fixed;
+  background-size: cover;
   overflow-x: hidden;
   color: #1a1a1a;
 }
 
 html {
   scroll-behavior: smooth;
-}
-
-@keyframes gradientMotion {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
 }
 
 /* Upload Box */
@@ -199,7 +190,8 @@ button:hover {
     display: none;
   }
 }
-/* Plus-sign Medical Background */
+
+/* Plus Sign Overlay (Optional, still usable) */
 .plus-bg {
   position: fixed;
   top: 0;
@@ -210,7 +202,7 @@ button:hover {
                     radial-gradient(#b2d8f7 1.2px, transparent 1.2px);
   background-size: 40px 40px;
   background-position: 0 0, 20px 20px;
-  opacity: 0.15;
+  opacity: 0.1;
   z-index: 0;
   pointer-events: none;
 }
