@@ -1,4 +1,4 @@
-// MediBridgePro – Stunning Glassmorphism UI Layout with Lottie + Advanced Styling
+// MediBridgePro – Stunning Glassmorphism UI Layout with Side Decor + Quotes
 import React, { useState } from "react";
 import {
   Button,
@@ -20,6 +20,8 @@ import Lottie from "lottie-react";
 import uploadAnim from "./assets/upload.json";
 import processingAnim from "./assets/processing.json";
 import illustration from "./assets/illustration.png";
+import side1 from "./assets/side1.png";
+import side2 from "./assets/side2.png";
 import jsPDF from "jspdf";
 import "./App.css";
 
@@ -73,6 +75,16 @@ function App() {
 
   return (
     <>
+      {/* Floating Decor & Quotes */}
+      <img src={side1} alt="floating1" className="floating-decor floating-1" />
+      <img src={side2} alt="floating2" className="floating-decor floating-2" />
+      <div className="floating-quote floating-quote-top">
+        “Every report is a step closer to healing.”
+      </div>
+      <div className="floating-quote floating-quote-bottom">
+        “Technology + empathy = MediBridgePro.”
+      </div>
+
       {/* Hero Section */}
       <Box
         sx={{
@@ -105,7 +117,11 @@ function App() {
         >
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12} md={6}>
-              <img src={illustration} alt="AI Medical" style={{ width: "100%", borderRadius: "20px" }} />
+              <img
+                src={illustration}
+                alt="AI Medical"
+                style={{ width: "90%", borderRadius: "20px", maxHeight: "320px" }}
+              />
             </Grid>
             <Grid item xs={12} md={6}>
               <Box textAlign="center">
