@@ -1,3 +1,4 @@
+// MediBridgePro – Stunning Glassmorphism UI Layout with Lottie + Advanced Styling
 import React, { useState } from "react";
 import {
   Button,
@@ -46,7 +47,6 @@ function App() {
         method: "POST",
         body: formData,
       });
-
       const data = await response.json();
       setSummary(data.summary);
     } catch (error) {
@@ -73,65 +73,44 @@ function App() {
 
   return (
     <>
-      {/* ✅ Option 1: Hero Section */}
+      {/* Hero Section */}
       <Box
         sx={{
           textAlign: "center",
           py: 8,
-          background: "linear-gradient(120deg, #e0f7fa, #f1f8ff)",
-          borderBottom: "1px solid #ddeeff",
+          background: "linear-gradient(135deg, #d0f1ff 0%, #e3f6ff 100%)",
+          borderBottom: "1px solid #cce0ff",
         }}
       >
-        <Typography variant="h3" fontWeight={600} gutterBottom>
-          Transform Your Health Reports with AI
+        <Typography variant="h3" fontWeight={700} gutterBottom color="#003366">
+          Transform Your Health Reports with AI 🧠
         </Typography>
         <Typography variant="h6" color="text.secondary" maxWidth="md" mx="auto">
-          Upload your medical PDFs and get instant summaries with AI-generated health passports.
-          Secure. Accurate. Fast.
+          Upload your medical PDFs and get AI-generated summaries + health passports.
         </Typography>
       </Box>
 
-      {/* Upload UI */}
-      <Container maxWidth="lg" sx={{ mt: 8 }}>
-        <div className="quote-container">
-          <div className="quote quote-1">🌟 You're stronger than your diagnosis!</div>
-          <div className="quote quote-2">💖 Healing begins with hope.</div>
-          <div className="quote quote-3">🧘‍♀️ Take a deep breath. You're not alone.</div>
-        </div>
-
+      {/* Upload Section with Glassmorphism */}
+      <Container maxWidth="md" sx={{ mt: 10 }}>
         <Paper
           elevation={3}
           sx={{
-            p: 5,
-            borderRadius: 4,
-            backdropFilter: "blur(12px)",
-            backgroundColor: "rgba(255, 255, 255, 0.3)",
+            p: 6,
+            borderRadius: 6,
+            background: "rgba(255, 255, 255, 0.2)",
+            backdropFilter: "blur(16px)",
             boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
             border: "1px solid rgba(255, 255, 255, 0.4)",
-            zIndex: 1,
           }}
         >
           <Grid container spacing={4} alignItems="center">
-            <Grid item xs={12} md={5}>
-              <Box display="flex" justifyContent="center" alignItems="center">
-                <img src={illustration} alt="medical" style={{ width: "100%", maxWidth: "400px" }} />
-              </Box>
+            <Grid item xs={12} md={6}>
+              <img src={illustration} alt="AI Medical" style={{ width: "100%", borderRadius: "20px" }} />
             </Grid>
-
-            <Grid item xs={12} md={7}>
-              <Typography
-                variant="h4"
-                fontWeight={600}
-                gutterBottom
-                align="center"
-                sx={{ mb: 3 }}
-              >
-                🧠 MediBridgePro
-              </Typography>
-
-              <Box textAlign="center" my={3}>
+            <Grid item xs={12} md={6}>
+              <Box textAlign="center">
                 {!file && !isLoading && (
-                  <Lottie animationData={uploadAnim} style={{ height: 160 }} />
+                  <Lottie animationData={uploadAnim} style={{ height: 150 }} />
                 )}
 
                 {file && (
@@ -141,27 +120,12 @@ function App() {
                 )}
 
                 <label htmlFor="upload-pdf">
-                  <Input
-                    accept="application/pdf"
-                    id="upload-pdf"
-                    type="file"
-                    onChange={handleFileChange}
-                  />
+                  <Input accept="application/pdf" id="upload-pdf" type="file" onChange={handleFileChange} />
                   <Button
                     variant="contained"
                     component="span"
                     startIcon={<CloudUploadIcon />}
-                    sx={{
-                      mt: 2,
-                      mb: 2,
-                      transition: "0.3s",
-                      fontWeight: "bold",
-                      px: 3,
-                      "&:hover": {
-                        transform: "scale(1.05)",
-                        backgroundColor: "primary.dark",
-                      },
-                    }}
+                    sx={{ mt: 2, fontWeight: 600 }}
                   >
                     Upload PDF
                   </Button>
@@ -170,18 +134,9 @@ function App() {
                 {file && (
                   <Button
                     variant="outlined"
-                    color="primary"
+                    sx={{ mt: 2, ml: 2, fontWeight: 600 }}
                     onClick={handleUpload}
                     disabled={isLoading}
-                    sx={{
-                      ml: 2,
-                      fontWeight: "bold",
-                      transition: "0.3s",
-                      "&:hover": {
-                        transform: "scale(1.05)",
-                        borderColor: "primary.dark",
-                      },
-                    }}
                   >
                     Generate Summary
                   </Button>
@@ -189,75 +144,61 @@ function App() {
 
                 {isLoading && (
                   <Box mt={4}>
-                    <Lottie animationData={processingAnim} style={{ height: 120 }} />
-                    <Typography variant="body1" color="text.secondary">
-                      Generating summary...
-                    </Typography>
+                    <Lottie animationData={processingAnim} style={{ height: 100 }} />
+                    <Typography color="text.secondary">Analyzing report...</Typography>
                     <CircularProgress sx={{ mt: 2 }} />
                   </Box>
                 )}
               </Box>
-
-              <Slide direction="up" in={!!summary && !isLoading} mountOnEnter unmountOnExit>
-                <Fade in={!!summary && !isLoading}>
-                  <Box mt={4}>
-                    <Typography variant="h6" gutterBottom>
-                      📝 Summary:
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        whiteSpace: "pre-wrap",
-                        backgroundColor: "#f5faff",
-                        p: 3,
-                        borderRadius: 3,
-                        fontFamily: "Georgia, serif",
-                        fontSize: "16px",
-                        lineHeight: 1.6,
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-                        border: "1px solid #ddeeff",
-                        color: "#333",
-                      }}
-                    >
-                      {summary}
-                    </Typography>
-
-                    <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
-                      <Button
-                        variant="outlined"
-                        startIcon={<VolumeUpIcon />}
-                        onClick={handleSpeak}
-                      >
-                        Read Aloud
-                      </Button>
-                      <Button
-                        variant="contained"
-                        startIcon={<FileDownloadIcon />}
-                        onClick={handleDownload}
-                      >
-                        Download PDF
-                      </Button>
-                    </Stack>
-                  </Box>
-                </Fade>
-              </Slide>
             </Grid>
           </Grid>
+
+          {/* Summary Output */}
+          <Slide direction="up" in={!!summary && !isLoading} mountOnEnter unmountOnExit>
+            <Fade in={!!summary && !isLoading}>
+              <Box mt={6} className="summary-card">
+                <Typography variant="h6" gutterBottom>
+                  📝 Summary:
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    whiteSpace: "pre-wrap",
+                    fontFamily: "Georgia, serif",
+                    fontSize: "1rem",
+                    lineHeight: 1.6,
+                    color: "#1a1a1a",
+                  }}
+                >
+                  {summary}
+                </Typography>
+
+                <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
+                  <Button variant="outlined" startIcon={<VolumeUpIcon />} onClick={handleSpeak}>
+                    Read Aloud
+                  </Button>
+                  <Button variant="contained" startIcon={<FileDownloadIcon />} onClick={handleDownload}>
+                    Download PDF
+                  </Button>
+                </Stack>
+              </Box>
+            </Fade>
+          </Slide>
         </Paper>
       </Container>
 
-      {/* ✅ Option 3: Footer */}
+      {/* Footer */}
       <Box
         sx={{
           mt: 10,
           py: 4,
           textAlign: "center",
-          backgroundColor: "#f9f9fb",
-          borderTop: "1px solid #e0e0e0",
+          backgroundColor: "#f0f6ff",
+          borderTop: "1px solid #dce8f8",
         }}
       >
         <Typography variant="body2" color="text.secondary">
-          © 2025 MediBridgePro | Built with ❤️ for better healthcare
+          © 2025 MediBridgePro | Built with 💖 for better healthcare
         </Typography>
       </Box>
     </>

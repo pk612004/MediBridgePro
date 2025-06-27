@@ -1,4 +1,6 @@
-/* App.css – MediBridgePro Final Enhanced Styling */
+/* MediBridgePro – Final Polished App.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display&display=swap');
 
 body {
   margin: 0;
@@ -10,14 +12,19 @@ body {
   color: #1a1a1a;
 }
 
-/* Gradient Motion Background */
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Gradient Animation */
 @keyframes gradientMotion {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* Uplifting Quotes */
+/* Motivational Quotes */
 .quote-container {
   position: fixed;
   top: 10px;
@@ -25,7 +32,6 @@ body {
   z-index: 10;
   pointer-events: none;
 }
-
 .quote {
   font-size: 0.9rem;
   font-style: italic;
@@ -39,7 +45,6 @@ body {
   animation: float 6s ease-in-out infinite;
   transition: all 0.3s ease;
 }
-
 .quote-1 { animation-delay: 0s; }
 .quote-2 { animation-delay: 1.5s; }
 .quote-3 { animation-delay: 3s; }
@@ -50,8 +55,9 @@ body {
   100% { transform: translateY(0px); }
 }
 
-/* Upload Container */
+/* Upload Box */
 .upload-box {
+  position: relative;
   padding: 2rem;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.6);
@@ -60,11 +66,56 @@ body {
   text-align: center;
   animation: fadeIn 1s ease-in-out;
   transition: all 0.4s ease;
+  overflow: hidden;
 }
-
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.96); }
   to { opacity: 1; transform: scale(1); }
+}
+
+/* Upload shimmer animation */
+.upload-box::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: shimmer 2.5s infinite;
+  pointer-events: none;
+  border-radius: 20px;
+}
+@keyframes shimmer {
+  0% { left: -75%; }
+  50% { left: 125%; }
+  100% { left: 125%; }
+}
+
+/* Glass Summary Card */
+.summary-card {
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  margin-top: 2rem;
+  transition: 0.3s ease;
+  max-height: 400px;
+  overflow-y: auto;
+  font-family: "Playfair Display", serif;
+}
+
+/* Custom Scrollbar inside summary */
+.summary-card::-webkit-scrollbar {
+  width: 8px;
+}
+.summary-card::-webkit-scrollbar-thumb {
+  background: #aad4ff;
+  border-radius: 8px;
+}
+.summary-card::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 /* Button Enhancements */
@@ -72,13 +123,13 @@ button {
   transition: all 0.3s ease;
   cursor: pointer;
   font-weight: 600;
+  letter-spacing: 0.3px;
 }
-
 button:hover {
   transform: scale(1.03);
 }
 
-/* Responsive Design: Hide quotes on mobile */
+/* Responsive – hide quotes */
 @media (max-width: 768px) {
   .quote-container {
     display: none;
