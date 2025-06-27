@@ -169,26 +169,44 @@ function App() {
             </Box>
 
             <Slide direction="up" in={!!summary && !isLoading} mountOnEnter unmountOnExit>
-              <Fade in={!!summary && !isLoading}>
-                <Box mt={4}>
-                  <Typography variant="h6" gutterBottom>
-                    📝 Summary:
-                  </Typography>
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      whiteSpace: "pre-wrap",
-                      backgroundColor: "#f9f9f9",
-                      p: 2,
-                      borderRadius: 2,
-                      boxShadow: 1,
-                    }}
-                  >
-                    {summary}
-                  </Typography>
-                </Box>
-              </Fade>
-            </Slide>
+  <Fade in={!!summary && !isLoading}>
+    <Box mt={5}>
+      <Typography
+        variant="h5"
+        fontWeight={700}
+        color="primary"
+        gutterBottom
+        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+      >
+        📝 Summary
+      </Typography>
+
+      <Box
+        sx={{
+          background: "linear-gradient(135deg, #ffffff, #f1f9ff)",
+          borderLeft: "5px solid #1976d2",
+          borderRadius: 3,
+          p: 3,
+          maxHeight: "320px",
+          overflowY: "auto",
+          fontFamily: "'Segoe UI', sans-serif",
+          fontSize: "1.05rem",
+          boxShadow: "0 6px 16px rgba(0,0,0,0.1)",
+          lineHeight: 1.7,
+          transition: "all 0.4s ease",
+        }}
+      >
+        <Typography
+          variant="body1"
+          sx={{ whiteSpace: "pre-wrap", color: "#333" }}
+        >
+          {summary}
+        </Typography>
+      </Box>
+    </Box>
+  </Fade>
+</Slide>
+
           </Grid>
         </Grid>
       </Paper>
