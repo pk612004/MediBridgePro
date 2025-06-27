@@ -18,7 +18,7 @@ import jsPDF from "jspdf";
 import Lottie from "lottie-react";
 import uploadAnim from "./assets/upload.json";
 import processingAnim from "./assets/processing.json";
-import backgroundImage from "./assets/board-bg.png"; // upload the doctor board image here
+import backgroundImage from "./assets/board-bg.png";
 import "./App.css";
 
 const Input = styled("input")({ display: "none" });
@@ -95,7 +95,12 @@ function App() {
               type="file"
               onChange={handleFileChange}
             />
-            <Button variant="contained" component="span" startIcon={<CloudUploadIcon />} className="action-btn">
+            <Button
+              variant="contained"
+              component="span"
+              startIcon={<CloudUploadIcon />}
+              className="action-btn"
+            >
               Upload PDF
             </Button>
           </label>
@@ -125,19 +130,38 @@ function App() {
 
         {summary && !isLoading && (
           <Box mt={6} className="summary-box">
-            <img src={backgroundImage} alt="Doctor Board" className="board-image" />
+            <img
+              src={backgroundImage}
+              alt="Doctor Board"
+              className="board-image"
+            />
             <Box className="summary-text">
               <Typography variant="body1" sx={{ whiteSpace: "pre-wrap" }}>
                 {summary}
               </Typography>
               <Stack direction="row" spacing={2} mt={2}>
-                <Button variant="outlined" size="small" startIcon={<ContentCopyIcon />} onClick={handleCopy}>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={<ContentCopyIcon />}
+                  onClick={handleCopy}
+                >
                   Copy
                 </Button>
-                <Button variant="contained" size="small" startIcon={<FileDownloadIcon />} onClick={handleDownloadPDF}>
+                <Button
+                  variant="contained"
+                  size="small"
+                  startIcon={<FileDownloadIcon />}
+                  onClick={handleDownloadPDF}
+                >
                   Download PDF
                 </Button>
-                <Button variant="text" size="small" startIcon={<VolumeUpIcon />} onClick={handleSpeak}>
+                <Button
+                  variant="text"
+                  size="small"
+                  startIcon={<VolumeUpIcon />}
+                  onClick={handleSpeak}
+                >
                   Read Aloud
                 </Button>
               </Stack>
