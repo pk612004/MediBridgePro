@@ -2,10 +2,9 @@ from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import os
-import fitz  # PyMuPDF
-from ai.gpt_engine import generate_summary  # Groq-based summarizer
+import fitz 
+from ai.gpt_engine import generate_summary  
 
-# -------------------- Flask App Setup --------------------
 app = Flask(__name__)
 app.secret_key = "supersecretkey123"
 
@@ -14,12 +13,11 @@ CORS(app, supports_credentials=True)
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# ✅ Health check route
 @app.route("/")
 def home():
-    return jsonify({"message": "✅ MediBridgePro Backend is Live!"})
+    return jsonify({"message": " MediBridgePro Backend is Live!"})
 
-# Upload PDF
+
 @app.route("/upload_pdf", methods=["POST"])
 def upload_pdf():
     if "file" not in request.files:

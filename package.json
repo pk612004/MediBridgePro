@@ -3,16 +3,18 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-  "frontend": "cd frontend-ui && npm start",
-  "backend": "powershell -Command \"cd backend; ..\\venv\\Scripts\\python.exe app.py\"",
-  "dev": "concurrently \"npm run frontend\" \"npm run backend\""
-},
-
+    "frontend": "cd frontend-ui && npm start",
+    "backend": "powershell -Command \"cd backend; ..\\venv\\Scripts\\python.exe app.py\"",
+    "dev": "concurrently \"npm run frontend\" \"npm run backend\""
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
     "concurrently": "^9.1.2"
+  },
+  "dependencies": {
+    "react-typical": "^0.1.3"
   }
 }

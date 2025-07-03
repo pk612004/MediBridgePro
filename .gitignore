@@ -30,3 +30,5 @@ backend/uploads/
 # Virtual Environments (if any)
 venv/
 .env/
+
+backend/.env

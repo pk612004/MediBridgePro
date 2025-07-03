@@ -1,7 +1,7 @@
 import os
 from groq import Groq
 
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))  # ✅ Use env variable
+client = Groq(api_key=os.getenv("GROQ_API_KEY")) 
 
 def generate_summary(medical_text):
     try:
