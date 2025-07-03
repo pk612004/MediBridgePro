@@ -1,16 +1,8 @@
-// MediBridgePro – Final App.js (glass UI + typewriter + health score + styled PDF)
-import React, { useState } from "react";
+// MediBridgePro – App with Health-Risk Score, glass UI & typewriter
+import React, { useState, useMemo } from "react";
 import {
-  Button,
-  Container,
-  Typography,
-  Box,
-  Paper,
-  CircularProgress,
-  Slide,
-  Fade,
-  Grid,
-  Stack,
+  Button, Container, Typography, Box, Paper,
+  CircularProgress, Slide, Fade, Grid, Stack,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
@@ -18,17 +10,20 @@ import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import { styled } from "@mui/system";
 import Lottie from "lottie-react";
 import { Typewriter } from "react-simple-typewriter";
-import uploadAnim from "./assets/upload.json";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import { motion } from "framer-motion";
+import "react-circular-progressbar/dist/styles.css";
+
+import uploadAnim     from "./assets/upload.json";
 import processingAnim from "./assets/processing.json";
-import illustration from "./assets/illustration.png";
-import side1 from "./assets/side1.png";
-import side2 from "./assets/side2.png";
-import jsPDF from "jspdf";
+import illustration   from "./assets/illustration.png";
+import side1          from "./assets/side1.png";
+import side2          from "./assets/side2.png";
+import jsPDF          from "jspdf";
 import "./App.css";
 
 const Input = styled("input")({ display: "none" });
 
-// quick demo tips
 const healthTips = [
   "Drink 2 L water daily 💧",
   "Wash hands regularly 🧼",
@@ -36,89 +31,105 @@ const healthTips = [
   "30-min exercise each day 🏃‍♀️",
 ];
 
+/* ────────────────────────── simple keyword-based risk score ───────── */
+const computeRiskScore = (text) => {
+  if (!text) return 0;
+  const lower = text.toLowerCase();
+  let score = 50;                               // baseline
+
+  const highRisk   = ["critical", "severe", "stroke", "cancer", "dementia"];
+  const midRisk    = ["abnormal", "elevated", "hypertension", "diabetes"];
+  const lowRiskPos = ["normal", "unremarkable", "stable", "within normal"];
+
+  highRisk.forEach((w) =>  lower.includes(w) && (score += 15));
+  midRisk.forEach((w) =>   lower.includes(w) && (score += 8));
+  lowRiskPos.forEach((w) => lower.includes(w) && (score -= 10));
+
+  score = Math.max(0, Math.min(100, score));
+  return score;
+};
+/* ──────────────────────────────────────────────────────────────────── */
+
+const RiskScoreCard = ({ score }) => {
+  const color =
+    score >= 70 ? "#e53935" : score >= 40 ? "#f5a623" : "#43a047";
+  const label = score >= 70 ? "High Risk" : score >= 40 ? "Moderate" : "Low";
+
+  return (
+    <motion.div
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ duration: 0.8 }}
+      className="glassmorphism"
+      style={{
+        padding: "2rem",
+        borderRadius: "1.5rem",
+        textAlign: "center",
+        backdropFilter: "blur(12px)",
+        background: "rgba(255,255,255,0.4)",
+        width: "260px",
+        margin: "auto",
+      }}
+    >
+      <Typography variant="h6" fontWeight={700} mb={2}>
+        🩺 Health Risk Score
+      </Typography>
+      <div style={{ width: 140, height: 140, margin: "auto" }}>
+        <CircularProgressbar
+          value={score}
+          text={`${score}%`}
+          styles={buildStyles({
+            pathColor: color,
+            textColor: "#333",
+            trailColor: "#d6d6d6",
+            textSize: "20px",
+            pathTransitionDuration: 1.2,
+          })}
+        />
+      </div>
+      <Typography mt={2} fontWeight={600} color={color}>
+        {label}
+      </Typography>
+    </motion.div>
+  );
+};
+
 function App() {
-  const [file, setFile] = useState(null);
+  const [file, setFile]       = useState(null);
   const [summary, setSummary] = useState("");
-  const [isLoading, setLoading] = useState(false);
-  const [healthScore] = useState(Math.floor(Math.random() * 41) + 60); // 60-100 demo
+  const [isLoading, setLoad]  = useState(false);
 
-  /* ───────── API calls ───────── */
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-    setSummary("");
-  };
+  /* calculate risk score once summary changes */
+  const riskScore = useMemo(() => computeRiskScore(summary), [summary]);
 
+  /* ───────── handlers ──────── */
+  const handleFileChange = (e) => { setFile(e.target.files[0]); setSummary(""); };
   const handleUpload = async () => {
     if (!file) return;
-    setLoading(true);
-    const form = new FormData();
-    form.append("file", file);
-
+    setLoad(true);
+    const fd = new FormData(); fd.append("file", file);
     try {
-      const r = await fetch(
-        "https://medibridge-backend-l8cf.onrender.com/upload_pdf",
-        { method: "POST", body: form }
-      );
-      const data = await r.json();
-      setSummary(data.summary);
-    } catch {
-      setSummary("❌ Error: Could not connect to backend.");
-    } finally {
-      setLoading(false);
-    }
+      const r = await fetch("https://medibridge-backend-l8cf.onrender.com/upload_pdf", {
+        method: "POST", body: fd,
+      });
+      const { summary } = await r.json();
+      setSummary(summary);
+    } catch { setSummary("❌ Error: Could not connect to backend."); }
+    finally { setLoad(false); }
   };
-
-  /* ───────── Styled PDF download (“Health Passport”) ───────── */
   const handleDownload = () => {
     const doc = new jsPDF();
-
-    // header banner
-    doc.setFillColor(0, 188, 212);
-    doc.rect(0, 0, 210, 20, "F");
-    doc.setFontSize(16);
-    doc.setTextColor(255, 255, 255);
-    doc.setFont("helvetica", "bold");
-    doc.text("MediBridgePro Health Passport", 105, 12, { align: "center" });
-
-    // footer
-    doc.setFillColor(240, 246, 255);
-    doc.rect(0, 285, 210, 12, "F");
-    doc.setFontSize(9);
-    doc.setTextColor(100);
-    doc.text(
-      "Generated by MediBridgePro | ©2025 – Better healthcare with AI",
-      105,
-      292,
-      { align: "center" }
-    );
-
-    // summary body
-    doc.setFontSize(12);
-    doc.setTextColor(0);
-    doc.setFont("times", "italic");
-    doc.text("📝 Summary:", 10, 30);
-    doc.setFont("times", "normal");
-    doc.text(doc.splitTextToSize(summary || "No summary yet.", 190), 10, 40);
-
-    // score block
-    doc.setFont("helvetica", "bold");
-    doc.text("❤️ Estimated Health Score:", 10, 120);
-    doc.setFontSize(28);
-    doc.setTextColor(0, 188, 212);
-    doc.text(`${healthScore}%`, 10, 140);
-
-    doc.save("MediBridge_Health_Passport.pdf");
+    doc.text(summary, 10, 20, { maxWidth: 180 });
+    doc.save("MediBridge_Summary.pdf");
   };
-
   const handleSpeak = () => {
-    const utter = new SpeechSynthesisUtterance(summary);
-    window.speechSynthesis.speak(utter);
+    const u = new SpeechSynthesisUtterance(summary);
+    window.speechSynthesis.speak(u);
   };
+  /* ─────────────────────────── */
 
-  /* ─────────── UI ─────────── */
   return (
     <>
-      {/* plus-sign bg / floating decor */}
       <div className="plus-bg" />
       <img src={side1} alt="" className="floating-decor floating-1" />
       <img src={side2} alt="" className="floating-decor floating-2" />
@@ -130,45 +141,30 @@ function App() {
       </div>
 
       {/* Hero */}
-      <Box
-        sx={{
-          textAlign: "center",
-          py: 8,
-          background: "linear-gradient(135deg,#d0f1ff 0%,#e3f6ff 100%)",
-          borderBottom: "1px solid #cce0ff",
-        }}
-      >
-        <Typography
-          variant="h2"
-          sx={{
-            fontWeight: 800,
-            fontFamily: "Playfair Display,serif",
-            background: "linear-gradient(90deg,#4facfe 0%,#00f2fe 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            animation: "pulse 2.5s infinite",
-          }}
-        >
+      <Box sx={{
+        textAlign:"center", py:8,
+        background:"linear-gradient(135deg,#d0f1ff 0%,#e3f6ff 100%)",
+        borderBottom:"1px solid #cce0ff",
+      }}>
+        <Typography variant="h2" sx={{
+          fontWeight:800,
+          fontFamily:"Playfair Display, serif",
+          background:"linear-gradient(90deg,#4facfe 0%,#00f2fe 100%)",
+          WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent",
+          animation:"pulse 2.5s infinite"
+        }}>
           MediBridge&nbsp;Pro
         </Typography>
         <Typography
-          variant="h6"
-          color="text.secondary"
-          maxWidth="md"
-          mx="auto"
-          mt={2}
-        >
+          variant="h6" color="text.secondary" maxWidth="md" mx="auto" mt={2}>
           <Typewriter
             words={[
               "AI-generated medical summaries 📑",
               "Instant health passports 📜",
               "Secure PDF uploads 🔐",
             ]}
-            cursor
-            cursorStyle="_"
-            typeSpeed={60}
-            deleteSpeed={40}
-            delaySpeed={2000}
+            loop={0} cursor cursorStyle="_"
+            typeSpeed={60} deleteSpeed={40} delaySpeed={2000}
           />
         </Typography>
         <style>{`
@@ -176,201 +172,90 @@ function App() {
         `}</style>
       </Box>
 
-      {/* animated health tips */}
-      <Box
-        sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          gap: 3,
-          mt: 4,
-          mb: 6,
-          px: 2,
-        }}
-      >
-        {healthTips.map((tip, i) => (
-          <Box
-            key={tip}
-            sx={{
-              px: 3,
-              py: 1,
-              borderRadius: 20,
-              background: "rgba(255,255,255,0.6)",
-              backdropFilter: "blur(10px)",
-              fontWeight: 500,
-              color: "#003366",
-              animation: `floatTip${i} 10s ease-in-out infinite`,
-            }}
-          >
-            <Typewriter
-              words={[tip]}
-              loop={0}
-              cursor
-              typeSpeed={60}
-              deleteSpeed={30}
-              delaySpeed={2500}
-            />
+      {/* Health tips */}
+      <Box sx={{display:"flex",justifyContent:"center",flexWrap:"wrap",gap:3,mt:4,mb:6,px:2}}>
+        {healthTips.map((tip,i)=>(
+          <Box key={i} sx={{
+            px:3,py:1,borderRadius:20,
+            background:"rgba(255,255,255,0.6)",backdropFilter:"blur(10px)",
+            fontWeight:500,color:"#003366",
+            animation:`floatTip${i} 10s ease-in-out infinite`
+          }}>
+            <Typewriter words={[tip]} loop={0} cursor typeSpeed={60} deleteSpeed={30} delaySpeed={2500}/>
             <style>{`
-              @keyframes floatTip${i}{
-                0%,100%{transform:translateY(0)}
-                50%{transform:translateY(-10px)}
-              }
+              @keyframes floatTip${i}{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
             `}</style>
           </Box>
         ))}
       </Box>
 
-      {/* Upload & summary */}
+      {/* Upload & Summary */}
       <Container maxWidth="md" sx={{ mt: 6 }}>
-        <Paper
-          elevation={3}
-          sx={{
-            p: 6,
-            borderRadius: 6,
-            background: "rgba(255,255,255,0.2)",
-            backdropFilter: "blur(16px)",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
-            border: "1px solid rgba(255,255,255,0.4)",
-            position: "relative",
-            zIndex: 1,
-          }}
-        >
+        <Paper elevation={3} sx={{
+          p:6, borderRadius:6, background:"rgba(255,255,255,0.2)",
+          backdropFilter:"blur(16px)", boxShadow:"0 8px 32px rgba(0,0,0,0.1)",
+          border:"1px solid rgba(255,255,255,0.4)", position:"relative", zIndex:1
+        }}>
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12} md={6}>
-              <img
-                src={illustration}
-                alt="AI Medical"
-                style={{ width: "90%", borderRadius: 20, maxHeight: 320 }}
-              />
+              <img src={illustration} alt="AI"
+                   style={{width:"90%",borderRadius:20,maxHeight:320}}/>
             </Grid>
             <Grid item xs={12} md={6}>
               <Box textAlign="center">
-                {!file && !isLoading && (
-                  <Lottie animationData={uploadAnim} style={{ height: 150 }} />
-                )}
-                {file && (
-                  <Typography variant="subtitle1" gutterBottom>
-                    📄 {file.name}
-                  </Typography>
-                )}
+                {!file && !isLoading && <Lottie animationData={uploadAnim} style={{height:150}}/>}
+                {file && <Typography variant="subtitle1" gutterBottom>📄 {file.name}</Typography>}
+
                 <label htmlFor="upload-pdf">
-                  <Input
-                    id="upload-pdf"
-                    type="file"
-                    accept="application/pdf"
-                    onChange={handleFileChange}
-                  />
-                  <Button
-                    variant="contained"
-                    component="span"
-                    startIcon={<CloudUploadIcon />}
-                    sx={{ mt: 2, fontWeight: 600 }}
-                  >
-                    Upload PDF
-                  </Button>
+                  <Input id="upload-pdf" type="file" accept="application/pdf" onChange={handleFileChange}/>
+                  <Button variant="contained" component="span" startIcon={<CloudUploadIcon />}
+                          sx={{ mt:2,fontWeight:600 }}>Upload PDF</Button>
                 </label>
+
                 {file && (
-                  <Button
-                    variant="outlined"
-                    sx={{ mt: 2, ml: 2, fontWeight: 600 }}
-                    disabled={isLoading}
-                    onClick={handleUpload}
-                  >
+                  <Button variant="outlined" sx={{ mt:2,ml:2,fontWeight:600 }}
+                          disabled={isLoading} onClick={handleUpload}>
                     Generate Summary
                   </Button>
                 )}
+
                 {isLoading && (
                   <Box mt={4}>
-                    <Lottie
-                      animationData={processingAnim}
-                      style={{ height: 100 }}
-                    />
-                    <Typography color="text.secondary">
-                      Analyzing report…
-                    </Typography>
-                    <CircularProgress sx={{ mt: 2 }} />
+                    <Lottie animationData={processingAnim} style={{height:100}}/>
+                    <Typography color="text.secondary">Analyzing report…</Typography>
+                    <CircularProgress sx={{ mt:2 }}/>
                   </Box>
                 )}
               </Box>
             </Grid>
           </Grid>
 
-          {/* summary + health score */}
-          <Slide
-            direction="up"
-            in={!!summary && !isLoading}
-            mountOnEnter
-            unmountOnExit
-          >
+          {/* risk score */}
+          {!!summary && !isLoading && (
+            <Box mt={6}>
+              <RiskScoreCard score={riskScore} />
+            </Box>
+          )}
+
+          {/* summary */}
+          <Slide direction="up" in={!!summary && !isLoading} mountOnEnter unmountOnExit>
             <Fade in={!!summary && !isLoading}>
               <Box mt={6} className="summary-card">
-                <Typography variant="h6" gutterBottom>
-                  📝 Summary:
-                </Typography>
-                <Typography
-                  variant="body1"
-                  sx={{
-                    whiteSpace: "pre-wrap",
-                    fontFamily: "Georgia, serif",
-                    fontSize: "1rem",
-                    lineHeight: 1.6,
-                    color: "#1a1a1a",
-                  }}
-                >
+                <Typography variant="h6" gutterBottom>📝 Summary:</Typography>
+                <Typography variant="body1" sx={{
+                  whiteSpace:"pre-wrap", fontFamily:"Georgia, serif",
+                  fontSize:"1rem", lineHeight:1.6, color:"#1a1a1a"
+                }}>
                   {summary}
                 </Typography>
-
-                <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
-                  <Button
-                    variant="outlined"
-                    startIcon={<VolumeUpIcon />}
-                    onClick={handleSpeak}
-                  >
+                <Stack direction="row" spacing={2} sx={{ mt:3 }}>
+                  <Button variant="outlined" startIcon={<VolumeUpIcon/>} onClick={handleSpeak}>
                     Read Aloud
                   </Button>
-                  <Button
-                    variant="contained"
-                    startIcon={<FileDownloadIcon />}
-                    onClick={handleDownload}
-                  >
+                  <Button variant="contained" startIcon={<FileDownloadIcon/>} onClick={handleDownload}>
                     Download PDF
                   </Button>
                 </Stack>
-
-                {/* Health score ring */}
-                <Box sx={{ mt: 5, textAlign: "center" }}>
-                  <Typography variant="subtitle1" gutterBottom>
-                    ❤️ Estimated Health Score
-                  </Typography>
-                  <Box sx={{ position: "relative", display: "inline-flex" }}>
-                    <CircularProgress
-                      variant="determinate"
-                      value={healthScore}
-                      size={100}
-                      thickness={5}
-                    />
-                    <Box
-                      sx={{
-                        top: 0,
-                        left: 0,
-                        bottom: 0,
-                        right: 0,
-                        position: "absolute",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Typography
-                        variant="h6"
-                        component="div"
-                        color="text.secondary"
-                      >
-                        {`${healthScore}%`}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Box>
               </Box>
             </Fade>
           </Slide>
@@ -378,15 +263,8 @@ function App() {
       </Container>
 
       {/* Footer */}
-      <Box
-        sx={{
-          mt: 10,
-          py: 4,
-          textAlign: "center",
-          backgroundColor: "#f0f6ff",
-          borderTop: "1px solid #dce8f8",
-        }}
-      >
+      <Box sx={{ mt:10, py:4, textAlign:"center",
+        backgroundColor:"#f0f6ff", borderTop:"1px solid #dce8f8" }}>
         <Typography variant="body2" color="text.secondary">
           © 2025 MediBridgePro | Built with 💖 for better healthcare
         </Typography>
