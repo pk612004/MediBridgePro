@@ -2,8 +2,6 @@
 
 MediBridgePro is a smart healthcare assistant that simplifies medical communication by converting complex diagnostic PDFs into clean, human-friendly summaries. Built using **AI**, **OCR**, and **NLP**, it bridges the gap between medical professionals and patients—instantly.
 
-![MediBridgePro Banner](./assets/banner.png)
-
 ---
 
 ##  Problem Statement
