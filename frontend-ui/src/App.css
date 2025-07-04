@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display&display=swap');
-
 body {
   margin: 0;
   font-family: "Inter", "Segoe UI", sans-serif;
@@ -8,12 +7,9 @@ body {
   overflow-x: hidden;
   color: #1a1a1a;
 }
-
 html {
   scroll-behavior: smooth;
 }
-
-/* Upload Box */
 .upload-box {
   position: relative;
   padding: 2rem;
@@ -26,13 +22,10 @@ html {
   transition: all 0.4s ease;
   overflow: hidden;
 }
-
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.96); }
   to { opacity: 1; transform: scale(1); }
 }
-
-/* Upload shimmer animation */
 .upload-box::after {
   content: "";
   position: absolute;
@@ -44,14 +37,11 @@ html {
   pointer-events: none;
   border-radius: 20px;
 }
-
 @keyframes shimmer {
   0% { left: -75%; }
   50% { left: 125%; }
   100% { left: 125%; }
 }
-
-/* Summary Card */
 .summary-card {
   background: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(16px);
@@ -65,7 +55,6 @@ html {
   overflow-y: auto;
   font-family: "Playfair Display", serif;
 }
-
 .summary-card::-webkit-scrollbar {
   width: 8px;
 }
@@ -76,8 +65,6 @@ html {
 .summary-card::-webkit-scrollbar-track {
   background: transparent;
 }
-
-/* Buttons */
 button {
   transition: all 0.3s ease;
   cursor: pointer;
@@ -87,8 +74,6 @@ button {
 button:hover {
   transform: scale(1.03);
 }
-
-/* Floating Side Decor Images */
 .floating-decor {
   position: fixed;
   width: 100px;
@@ -96,26 +81,21 @@ button:hover {
   animation: slowFloat 18s ease-in-out infinite;
   z-index: 1;
 }
-
 .floating-1 {
   top: 100px;
   left: 30px;
   animation-delay: 0s;
 }
-
 .floating-2 {
   bottom: 80px;
   right: 40px;
   animation-delay: 3s;
 }
-
 @keyframes slowFloat {
   0% { transform: translateY(0px); }
   50% { transform: translateY(-20px); }
   100% { transform: translateY(0px); }
 }
-
-/* Floating Motivational Quotes */
 .floating-quote {
   position: fixed;
   max-width: 220px;
@@ -131,25 +111,20 @@ button:hover {
   animation: quoteDrift 12s ease-in-out infinite;
   z-index: 2;
 }
-
 .floating-quote-top {
   top: 120px;
   right: 50px;
 }
-
 .floating-quote-bottom {
   bottom: 100px;
   left: 60px;
   animation-delay: 2s;
 }
-
 @keyframes quoteDrift {
   0% { transform: translateX(0px); }
   50% { transform: translateX(10px); }
   100% { transform: translateX(0px); }
 }
-
-/* Old Fixed Quote Box (top-left) */
 .quote-container {
   position: fixed;
   top: 10px;
@@ -157,7 +132,6 @@ button:hover {
   z-index: 10;
   pointer-events: none;
 }
-
 .quote {
   font-size: 0.9rem;
   font-style: italic;
@@ -171,18 +145,14 @@ button:hover {
   animation: float 6s ease-in-out infinite;
   transition: all 0.3s ease;
 }
-
 .quote-1 { animation-delay: 0s; }
 .quote-2 { animation-delay: 1.5s; }
 .quote-3 { animation-delay: 3s; }
-
 @keyframes float {
   0%   { transform: translateY(0px); }
   50%  { transform: translateY(-8px); }
   100% { transform: translateY(0px); }
 }
-
-/* Responsive Cleanup */
 @media (max-width: 768px) {
   .floating-decor,
   .floating-quote,
@@ -190,8 +160,6 @@ button:hover {
     display: none;
   }
 }
-
-/* Plus Sign Overlay (Optional, still usable) */
 .plus-bg {
   position: fixed;
   top: 0;

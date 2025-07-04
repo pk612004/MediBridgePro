@@ -1,4 +1,4 @@
-// MediBridgePro – App with Health-Risk Score, glass UI & typewriter
+
 import React, { useState, useMemo } from "react";
 import {
   Button, Container, Typography, Box, Paper,
@@ -13,7 +13,6 @@ import { Typewriter } from "react-simple-typewriter";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import { motion } from "framer-motion";
 import "react-circular-progressbar/dist/styles.css";
-
 import uploadAnim     from "./assets/upload.json";
 import processingAnim from "./assets/processing.json";
 import illustration   from "./assets/illustration.png";
@@ -21,40 +20,30 @@ import side1          from "./assets/side1.png";
 import side2          from "./assets/side2.png";
 import jsPDF          from "jspdf";
 import "./App.css";
-
 const Input = styled("input")({ display: "none" });
-
 const healthTips = [
   "Drink 2 L water daily 💧",
   "Wash hands regularly 🧼",
   "Sleep 7-8 hrs every night 🛌",
   "30-min exercise each day 🏃‍♀️",
 ];
-
-/* ────────────────────────── simple keyword-based risk score ───────── */
 const computeRiskScore = (text) => {
   if (!text) return 0;
   const lower = text.toLowerCase();
-  let score = 50;                               // baseline
-
+  let score = 50;                               
   const highRisk   = ["critical", "severe", "stroke", "cancer", "dementia"];
   const midRisk    = ["abnormal", "elevated", "hypertension", "diabetes"];
   const lowRiskPos = ["normal", "unremarkable", "stable", "within normal"];
-
   highRisk.forEach((w) =>  lower.includes(w) && (score += 15));
   midRisk.forEach((w) =>   lower.includes(w) && (score += 8));
   lowRiskPos.forEach((w) => lower.includes(w) && (score -= 10));
-
   score = Math.max(0, Math.min(100, score));
   return score;
 };
-/* ──────────────────────────────────────────────────────────────────── */
-
 const RiskScoreCard = ({ score }) => {
   const color =
     score >= 70 ? "#e53935" : score >= 40 ? "#f5a623" : "#43a047";
   const label = score >= 70 ? "High Risk" : score >= 40 ? "Moderate" : "Low";
-
   return (
     <motion.div
       initial={{ scale: 0.8, opacity: 0 }}
@@ -93,16 +82,10 @@ const RiskScoreCard = ({ score }) => {
     </motion.div>
   );
 };
-
 function App() {
   const [file, setFile]       = useState(null);
   const [summary, setSummary] = useState("");
   const [isLoading, setLoad]  = useState(false);
-
-  /* calculate risk score once summary changes */
-  const riskScore = useMemo(() => computeRiskScore(summary), [summary]);
-
-  /* ───────── handlers ──────── */
   const handleFileChange = (e) => { setFile(e.target.files[0]); setSummary(""); };
   const handleUpload = async () => {
     if (!file) return;
@@ -126,8 +109,6 @@ function App() {
     const u = new SpeechSynthesisUtterance(summary);
     window.speechSynthesis.speak(u);
   };
-  /* ─────────────────────────── */
-
   return (
     <>
       <div className="plus-bg" />
@@ -139,8 +120,7 @@ function App() {
       <div className="floating-quote floating-quote-bottom">
         “Technology + empathy = MediBridgePro.”
       </div>
-
-      {/* Hero */}
+      {}
       <Box sx={{
         textAlign:"center", py:8,
         background:"linear-gradient(135deg,#d0f1ff 0%,#e3f6ff 100%)",
@@ -171,8 +151,7 @@ function App() {
           @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
         `}</style>
       </Box>
-
-      {/* Health tips */}
+      {}
       <Box sx={{display:"flex",justifyContent:"center",flexWrap:"wrap",gap:3,mt:4,mb:6,px:2}}>
         {healthTips.map((tip,i)=>(
           <Box key={i} sx={{
@@ -188,8 +167,7 @@ function App() {
           </Box>
         ))}
       </Box>
-
-      {/* Upload & Summary */}
+      {}
       <Container maxWidth="md" sx={{ mt: 6 }}>
         <Paper elevation={3} sx={{
           p:6, borderRadius:6, background:"rgba(255,255,255,0.2)",
@@ -205,20 +183,17 @@ function App() {
               <Box textAlign="center">
                 {!file && !isLoading && <Lottie animationData={uploadAnim} style={{height:150}}/>}
                 {file && <Typography variant="subtitle1" gutterBottom>📄 {file.name}</Typography>}
-
                 <label htmlFor="upload-pdf">
                   <Input id="upload-pdf" type="file" accept="application/pdf" onChange={handleFileChange}/>
                   <Button variant="contained" component="span" startIcon={<CloudUploadIcon />}
                           sx={{ mt:2,fontWeight:600 }}>Upload PDF</Button>
                 </label>
-
                 {file && (
                   <Button variant="outlined" sx={{ mt:2,ml:2,fontWeight:600 }}
                           disabled={isLoading} onClick={handleUpload}>
                     Generate Summary
                   </Button>
                 )}
-
                 {isLoading && (
                   <Box mt={4}>
                     <Lottie animationData={processingAnim} style={{height:100}}/>
@@ -229,15 +204,13 @@ function App() {
               </Box>
             </Grid>
           </Grid>
-
-          {/* risk score */}
+          {}
           {!!summary && !isLoading && (
             <Box mt={6}>
               <RiskScoreCard score={riskScore} />
             </Box>
           )}
-
-          {/* summary */}
+          {}
           <Slide direction="up" in={!!summary && !isLoading} mountOnEnter unmountOnExit>
             <Fade in={!!summary && !isLoading}>
               <Box mt={6} className="summary-card">
@@ -261,8 +234,7 @@ function App() {
           </Slide>
         </Paper>
       </Container>
-
-      {/* Footer */}
+      {}
       <Box sx={{ mt:10, py:4, textAlign:"center",
         backgroundColor:"#f0f6ff", borderTop:"1px solid #dce8f8" }}>
         <Typography variant="body2" color="text.secondary">
@@ -272,5 +244,4 @@ function App() {
     </>
   );
 }
-
 export default App;
