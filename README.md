@@ -28,7 +28,7 @@ Most patients struggle to understand medical reports due to technical jargon and
 ##  Live Demo
 
  **[Try the App →](https://medibridge-frontend-w50t.onrender.com/)**  
- **[Watch Demo Video →](#)**
+ **[Watch Demo Video →](https://youtu.be/sNJrdmgbjMw)**
 
 ---
 
