@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "frontend": "cd frontend-ui && npm start",
+    "backend": "cd backend && venv\\Scripts\\python app.py",
+    "dev": "concurrently \"npm run frontend\" \"npm run backend\""
+  }
+}
