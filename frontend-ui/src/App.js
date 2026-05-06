@@ -100,7 +100,7 @@ function App() {
     const fd = new FormData(); fd.append("file", file);
     fd.append("language", language);
     try {
-      const r = await fetch("https://medibridge-frontend-w50t.onrender.com/upload_pdf", {
+      const r = await fetch("https://medibridge-backend-l8cf.onrender.com/upload_pdf", {
         method: "POST", body: fd,
       });
       const { summary } = await r.json();
