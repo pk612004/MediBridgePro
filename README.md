@@ -106,8 +106,8 @@ This makes healthcare information more accessible for regional language users.
 🔗 **Frontend:**  
 https://medibridge-frontend-w50t.onrender.com/
 
-🎥 **Demo Video:**  
-https://youtu.be/sNJrdmgbjMw
+<!-- 🎥 **Demo Video:**  
+https://youtu.be/sNJrdmgbjMw -->
 
 ---
 
