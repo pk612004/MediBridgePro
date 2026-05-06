@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from "react";
 import {
   Button, Container, Typography, Box, Paper,
-  CircularProgress, Slide, Fade, Grid, Stack,
+  CircularProgress, Slide, Fade, Grid, Stack,Select,MenuItem
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
@@ -27,6 +27,7 @@ const healthTips = [
   "Sleep 7-8 hrs every night 🛌",
   "30-min exercise each day 🏃‍♀️",
 ];
+
 const computeRiskScore = (text) => {
   if (!text) return 0;
   const lower = text.toLowerCase();
@@ -83,9 +84,11 @@ const RiskScoreCard = ({ score }) => {
   );
 };
 function App() {
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const [file, setFile]       = useState(null);
   const [summary, setSummary] = useState("");
   const [isLoading, setLoad]  = useState(false);
+  const [language, setLanguage] = useState("English");
     const riskScore = useMemo(
     () => computeRiskScore(summary),
     [summary]
@@ -95,13 +98,14 @@ function App() {
     if (!file) return;
     setLoad(true);
     const fd = new FormData(); fd.append("file", file);
+    fd.append("language", language);
     try {
       const r = await fetch("https://medibridge-frontend-w50t.onrender.com/upload_pdf", {
         method: "POST", body: fd,
       });
       const { summary } = await r.json();
       setSummary(summary);
-    } catch { setSummary("❌ Error: Could not connect to backend."); }
+    } catch { setSummary(" Error: Could not connect to backend."); }
     finally { setLoad(false); }
   };
   const handleDownload = () => {
@@ -109,10 +113,23 @@ function App() {
     doc.text(summary, 10, 20, { maxWidth: 180 });
     doc.save("MediBridge_Summary.pdf");
   };
+  // const handleSpeak = () => {
+  //   const u = new SpeechSynthesisUtterance(summary);
+  //   window.speechSynthesis.speak(u);
+  // };
   const handleSpeak = () => {
+  if (isSpeaking) {
+    window.speechSynthesis.cancel();
+    setIsSpeaking(false);
+  } else {
     const u = new SpeechSynthesisUtterance(summary);
+
+    u.onend = () => setIsSpeaking(false);
+
     window.speechSynthesis.speak(u);
-  };
+    setIsSpeaking(true);
+  }
+};
   return (
     <>
       <div className="plus-bg" />
@@ -187,6 +204,61 @@ function App() {
               <Box textAlign="center">
                 {!file && !isLoading && <Lottie animationData={uploadAnim} style={{height:150}}/>}
                 {file && <Typography variant="subtitle1" gutterBottom>📄 {file.name}</Typography>}
+                {/* <Select
+  value={language}
+  onChange={(e) => setLanguage(e.target.value)}
+  sx={{ mt: 2, minWidth: 200 }}
+>
+  <MenuItem value="English">English</MenuItem>
+  <MenuItem value="Hindi">Hindi</MenuItem>
+  <MenuItem value="Punjabi">Punjabi</MenuItem>
+  <MenuItem value="Urdu">Urdu</MenuItem>
+</Select> */}
+<Select
+  value={language}
+  onChange={(e) => setLanguage(e.target.value)}
+  displayEmpty
+  sx={{
+    mt: 4,
+    minWidth: 220,
+    height: 45,
+
+    display: "flex",
+    alignItems: "center",   
+
+    background: "rgba(255, 255, 255, 0.98)",
+    fontWeight: 500,
+    color: "#1a1a1a",
+    px: 1,
+
+    borderRadius: "8px",   
+
+    "& .MuiSelect-select": {
+      display: "flex",
+      alignItems: "center",
+      height: "100%",      
+      padding: "0 10px",
+    },
+
+    "& fieldset": {
+      borderColor: "#1976d2",   
+    },
+
+    "&:hover fieldset": {
+      borderColor: "#1565c0",
+    },
+
+    "&.Mui-focused fieldset": {
+      borderColor: "#1976d2",
+      borderWidth: "2px",
+    }
+  }}
+>
+  <MenuItem value="English"> English</MenuItem>
+  <MenuItem value="Hindi"> Hindi</MenuItem>
+  <MenuItem value="Punjabi"> Punjabi</MenuItem>
+  <MenuItem value="Urdu"> Urdu</MenuItem>
+</Select>
                 <label htmlFor="upload-pdf">
                   <Input id="upload-pdf" type="file" accept="application/pdf" onChange={handleFileChange}/>
                   <Button variant="contained" component="span" startIcon={<CloudUploadIcon />}
@@ -227,7 +299,7 @@ function App() {
                 </Typography>
                 <Stack direction="row" spacing={2} sx={{ mt:3 }}>
                   <Button variant="outlined" startIcon={<VolumeUpIcon/>} onClick={handleSpeak}>
-                    Read Aloud
+                    {isSpeaking ? "Stop Audio" : "Read Aloud"}
                   </Button>
                   <Button variant="contained" startIcon={<FileDownloadIcon/>} onClick={handleDownload}>
                     Download PDF
@@ -239,13 +311,17 @@ function App() {
         </Paper>
       </Container>
       {}
-      <Box sx={{ mt:10, py:4, textAlign:"center",
+      <Box sx={{ mt:10, py:4, textAlign:"center" ,
         backgroundColor:"#f0f6ff", borderTop:"1px solid #dce8f8" }}>
         <Typography variant="body2" color="text.secondary">
-          © 2025 MediBridgePro | Built with 💖 for better healthcare
+          © 2026 MediBridgePro | Built with 💖 for better healthcare
         </Typography>
       </Box>
     </>
   );
 }
 export default App;
+
+
+
+

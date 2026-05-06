@@ -1,63 +1,129 @@
-#  MediBridgePro – AI Medical Report Summarizer
+#  MediBridgePro – AI Powered Medical Report Summarizer
 
-MediBridgePro is a smart healthcare assistant that simplifies medical communication by converting complex diagnostic PDFs into clean, human-friendly summaries. Built using **AI**, **OCR**, and **NLP**, it bridges the gap between medical professionals and patients—instantly.
+MediBridgePro is an AI-based healthcare assistant that transforms complex medical reports into simple, easy-to-understand summaries.  
+The platform helps patients better understand their health reports through AI summarization, multilingual support, health risk analysis, and text-to-speech features.
 
 ---
 
 ##  Problem Statement
 
-Most patients struggle to understand medical reports due to technical jargon and lack of visual clarity. This leads to:
-- Delayed actions
-- Poor medication adherence
-- Over-dependence on doctors for minor doubts
+Medical reports often contain technical terminology that is difficult for normal patients to understand. This can lead to:
+
+- Confusion regarding diagnosis
+- Delayed medical decisions
+- Poor understanding of treatment plans
+- Dependence on doctors for basic interpretation
 
 ---
 
-##  Solution
+##  Our Solution
 
-**MediBridgePro** allows users to:
+MediBridgePro simplifies healthcare communication by allowing users to:
+
 - Upload medical PDF reports
-- Generate AI-powered summaries using Groq + spaCy
-- View estimated **Health Risk Scores**
-- Download a beautifully styled **Health Passport**
-- Hear summaries using **Text-to-Speech**
-- See detected **conditions, symptoms, medications** in a chart
+- Extract text automatically from reports
+- Generate AI-powered summaries
+- View estimated health risk scores
+- Listen to summaries using text-to-speech
+- Download a digital health passport
+- Translate summaries into regional languages
 
 ---
 
-##  Live Demo
+##  Multilingual Support
 
- **[Try the App →](https://medibridge-frontend-w50t.onrender.com/)**  
- **[Watch Demo Video →](https://youtu.be/sNJrdmgbjMw)**
+Users can generate summaries in multiple languages including:
+
+-  English
+-  Hindi
+-  Punjabi
+-  Urdu
+
+This makes healthcare information more accessible for regional language users.
 
 ---
 
 ##  Key Features
 
-| Feature                     | Description                                           |
-|--------------------------|------------------------------------------------------|
-|  PDF Upload              | Drag-and-drop medical PDFs securely                  |
-|  AI Summary              | Uses LLM (Groq) + OCR to auto-generate summaries     |
-|  Health Score            | Animated score to indicate overall wellness          |
-|  Text-to-Speech          | Summary can be read aloud instantly                  |
-|  Health Passport         | Download structured PDF with highlights              |
-|  Medical Entity Chart    | Extracts & visualizes symptoms, medications, etc.    |
+| Feature | Description |
+|----------|-------------|
+|  PDF Upload | Upload medical reports securely |
+|  AI Summary | Generate simple medical summaries using LLM |
+|  Language Translation | Summaries available in multiple languages |
+|  Health Risk Score | Displays estimated health condition risk |
+|  Text-to-Speech | Read summaries aloud |
+|  Health Passport | Download structured PDF summary |
+|  NLP Processing | Extracts important medical information |
 
 ---
 
 ##  Tech Stack
 
-**Frontend:** React.js, Material UI, Lottie, Framer Motion  
-**Backend:** Python (Flask), Groq API, spaCy, OCR (pdf2image, pytesseract)  
-**PDF Styling:** jsPDF  
-**Hosting:** Render
+### Frontend
+- React.js
+- Material UI
+- Framer Motion
+- Lottie Animations
+
+### Backend
+- Python Flask
+- Groq API (LLaMA 3.1)
+- spaCy (NLP)
+- PyMuPDF (PDF text extraction)
+
+### Additional Tools
+- jsPDF
+- Web Speech API
+- Render Deployment
 
 ---
 
-##  Performance & Metrics
+##  How It Works
 
--  **92%+ summary accuracy** (tested on 10 real reports)
--  **<10 seconds** response time
--  Works on all modern browsers & devices
--  **Roadmap:** Multilingual support, ICD-10 tagging, Doctor Feedback loop
+1. User uploads a medical PDF report  
+2. Backend extracts text from the report  
+3. AI model analyzes medical information  
+4. Summary is generated in simple language  
+5. User can translate, hear, or download the report  
 
+---
+
+##  Project Status
+
+###  Completed
+- Frontend UI developed
+- PDF upload working
+- AI summary generation
+- Health risk score
+- Multilingual translation
+- Text-to-speech integration
+
+
+---
+
+##  Live Demo
+
+🔗 **Frontend:**  
+https://medibridge-frontend-w50t.onrender.com/
+
+🎥 **Demo Video:**  
+https://youtu.be/sNJrdmgbjMw
+
+---
+
+
+---
+
+##  Future Enhancements
+
+- Doctor recommendation system
+- Voice-based chatbot assistant
+- Disease prediction module
+- Secure patient history storage
+- Mobile application support
+
+---
+
+##  Vision
+
+MediBridgePro aims to bridge the communication gap between healthcare professionals and patients by making medical information simpler, faster, and accessible to everyone.
